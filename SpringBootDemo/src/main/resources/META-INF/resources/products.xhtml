@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>SpringBootDemo</title>
+</h:head>
+
+<h:body>
+
+    <h1><a href="products.xhtml">Products</a></h1>
+
+    <h:form id="form">
+
+        <p:growl id="messages" showDetail="false"/>
+<div>
+        <div style="float:left; width:20%;">
+            <p:menu model="#{productsView.menuModel}" />
+        </div>
+
+        <div style="float:left; width:80%;">
+        <p:dataGrid var="product" value="#{productsView.products}" columns="3" layout="grid"
+                    rows="12" paginator="true" id="products"
+                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    rowsPerPageTemplate="6,12,16">
+
+            <p:panel header="#{product.id}" style="text-align:center">
+                <h:panelGrid columns="1" style="width:100%">
+                    <h:outputText value="#{product.getName()}" />
+                    <h:outputText value="#{product.getDescription()}" />
+                    <h:outputText value="#{product.getPrice()}" />
+
+                    <p:commandLink update=":form:productDetail" oncomplete="PF('productDialog').show()" title="View Detail">
+                        <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;">View details</h:outputText>
+                        <f:setPropertyActionListener value="#{product}" target="#{productsView.selectedProduct}" />
+                    </p:commandLink>
+                </h:panelGrid>
+            </p:panel>
+
+        </p:dataGrid>
+        </div>
+
+</div>
+        <p:dialog header="Product Info" widgetVar="productDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <p:outputPanel id="productDetail" style="text-align:center;">
+                <p:panelGrid  columns="2" rendered="#{not empty productsView.selectedProduct}" columnClasses="label,value">
+
+                    <h:outputText value="Id:" />
+                    <h:outputText value="#{productsView.selectedProduct.id}" />
+
+                    <h:outputText value="Name:" />
+                    <h:outputText value="#{productsView.selectedProduct.name}" />
+
+                    <h:outputText value="Description:" />
+                    <h:outputText value="#{productsView.selectedProduct.description}"/>
+
+                    <h:outputText value="Price" />
+                    <h:outputText value="$#{productsView.selectedProduct.price/100}" />
+                </p:panelGrid>
+            </p:outputPanel>
+        </p:dialog>
+    </h:form>
+</h:body>
+</html>
